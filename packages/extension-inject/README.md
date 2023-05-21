@@ -17,3 +17,5 @@ function enableFn (originName: string): Promise<Injected> {
 // injects the extension into the page
 injectExtension(enableFn, { name: 'myExtension', version: '1.0.1' });
 ```
+packages/extension-inject
+packages/extension-inject
