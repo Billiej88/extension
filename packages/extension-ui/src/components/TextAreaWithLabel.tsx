@@ -1,10 +1,10 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback } from 'react';
 
-import Label from './Label';
-import { TextArea } from './TextInputs';
+import Label from './Label.js';
+import { TextArea } from './TextInputs.js';
 
 interface Props {
   className?: string;

@@ -1,14 +1,15 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributor
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributor
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
-import { WithTranslation } from 'react-i18next';
+import type { WithTranslation } from 'react-i18next';
 
-import Header from '../partials/Header';
-import Button from './Button';
-import ButtonArea from './ButtonArea';
-import translate from './translate';
-import VerticalSpace from './VerticalSpace';
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+
+import Header from '../partials/Header.js';
+import Button from './Button.js';
+import ButtonArea from './ButtonArea.js';
+import VerticalSpace from './VerticalSpace.js';
 
 interface Props extends WithTranslation {
   children: React.ReactNode;
@@ -20,6 +21,8 @@ interface Props extends WithTranslation {
 interface State {
   error: Error | null;
 }
+
+const translate = withTranslation();
 
 // NOTE: This is the only way to do an error boundary, via extend
 class ErrorBoundary extends React.Component<Props> {
@@ -50,9 +53,9 @@ class ErrorBoundary extends React.Component<Props> {
     return error
       ? (
         <>
-          <Header text={t<string>('An error occured')} />
+          <Header text={t<string, Record<string, string>, string>('An error occurred')} />
           <div>
-            {t<string>('Something went wrong with the query and rendering of this component. {{message}}', {
+            {t('Something went wrong with the query and rendering of this component. {{message}}', {
               replace: { message: error.message }
             })}
           </div>
@@ -61,7 +64,7 @@ class ErrorBoundary extends React.Component<Props> {
             <Button
               onClick={this.#goHome}
             >
-              {t<string>('Back to home')}
+              {t('Back to home')}
             </Button>
           </ButtonArea>
         </>

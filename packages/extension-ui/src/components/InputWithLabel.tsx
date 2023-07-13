@@ -1,13 +1,13 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback, useState } from 'react';
-import styled from 'styled-components';
 
-import useTranslation from '../hooks/useTranslation';
-import Label from './Label';
-import { Input } from './TextInputs';
-import Warning from './Warning';
+import { useTranslation } from '../hooks/index.js';
+import { styled } from '../styled.js';
+import Label from './Label.js';
+import { Input } from './TextInputs.js';
+import Warning from './Warning.js';
 
 interface Props {
   className?: string;
@@ -74,7 +74,7 @@ function InputWithLabel ({ className, defaultValue, disabled, isError, isFocused
         withError={isError}
       />
       { isCapsLock && (
-        <Warning isBelowInput>{t<string>('Warning: Caps lock is on')}</Warning>
+        <Warning isBelowInput>{t('Warning: Caps lock is on')}</Warning>
       )}
     </Label>
   );

@@ -1,10 +1,10 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback, useState } from 'react';
 
-import { ToastContext } from '..';
-import Toast from './Toast';
+import { ToastContext } from '../index.js';
+import Toast from './Toast.js';
 
 interface ToastProviderProps {
   children?: React.ReactNode;

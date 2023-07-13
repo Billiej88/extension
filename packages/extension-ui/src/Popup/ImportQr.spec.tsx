@@ -1,18 +1,24 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
+
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router';
 
-import { Button } from '../components';
-import * as messaging from '../messaging';
-import { flushAllPromises } from '../testHelpers';
-import ImportQr from './ImportQr';
+import { Button } from '../components/index.js';
+import * as messaging from '../messaging.js';
+import { flushAllPromises } from '../testHelpers.js';
+import ImportQr from './ImportQr.js';
+
+const { configure, mount } = enzyme;
 
 const mockedAccount = {
   content: '12bxf6QJS5hMJgwbJMDjFot1sq93EvgQwyuPWENr9SzJfxtN',
@@ -37,6 +43,13 @@ interface QrScanAddressProps {
   style?: React.CSSProperties;
 }
 
+// // NOTE Required for spyOn when using @swc/jest
+// // https://github.com/swc-project/swc/issues/3843
+// jest.mock('../messaging', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../messaging')
+// }));
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
 configure({ adapter: new Adapter() });
 
@@ -46,14 +59,13 @@ const typeName = async (wrapper: ReactWrapper, value: string) => {
   wrapper.update();
 };
 
-jest.mock('@polkadot/react-qr', () => {
-  return {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    QrScanAddress: ({ onScan }: QrScanAddressProps): null => {
-      return null;
-    }
-  };
-});
+// jest.mock('@polkadot/react-qr', () => {
+//   return {
+//     QrScanAddress: (_: QrScanAddressProps): null => {
+//       return null;
+//     }
+//   };
+// });
 
 describe('ImportQr component', () => {
   let wrapper: ReactWrapper;
@@ -66,6 +78,7 @@ describe('ImportQr component', () => {
       </MemoryRouter>
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       (wrapper.find('QrScanAddress').first().prop('onScan') as unknown as QrScanAddressProps['onScan'])(mockedAccount);
@@ -119,7 +132,7 @@ describe('ImportQr component', () => {
   });
 
   it('creates the external account', async () => {
-    jest.spyOn(messaging, 'createAccountExternal').mockResolvedValue(false);
+    jest.spyOn(messaging, 'createAccountExternal').mockImplementation(() => Promise.resolve(false));
     wrapper.find(Button).simulate('click');
     await act(flushAllPromises);
 

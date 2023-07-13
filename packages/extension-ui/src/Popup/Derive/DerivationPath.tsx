@@ -1,15 +1,15 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
+import type { ThemeProps } from '../../types.js';
 
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 
-import { Button, InputWithLabel } from '../../components';
-import useTranslation from '../../hooks/useTranslation';
+import { Button, InputWithLabel } from '../../components/index.js';
+import { useTranslation } from '../../hooks/index.js';
+import { styled } from '../../styled.js';
 
 interface Props extends ThemeProps{
   className?: string;
@@ -52,8 +52,8 @@ function DerivationPath ({ className, defaultPath, isError, onChange, withSoftPa
             }
             onChange={_onChange}
             placeholder={withSoftPath
-              ? t<string>('//hard/soft')
-              : t<string>('//hard')
+              ? t('//hard/soft')
+              : t('//hard')
             }
             value={path}
           />

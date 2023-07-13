@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 const path = require('path');
@@ -30,11 +30,14 @@ module.exports = (entry, alias = {}) => ({
     rules: [
       {
         exclude: /(node_modules)/,
-        test: /\.(js|mjs|ts|tsx)$/,
+        test: /\.(ts|tsx)$/,
         use: [
           {
-            loader: require.resolve('babel-loader'),
-            options: require('@polkadot/dev/config/babel-config-webpack.cjs')
+            loader: require.resolve('ts-loader'),
+            options: {
+              configFile: 'tsconfig.webpack.json',
+              transpileOnly: true
+            }
           }
         ]
       },
@@ -93,6 +96,9 @@ module.exports = (entry, alias = {}) => ({
       ...alias,
       [`@polkadot/${p}`]: path.resolve(__dirname, `../${p}/src`)
     }), alias),
+    extensionAlias: {
+      '.js': ['.ts', '.tsx', '.js']
+    },
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     fallback: {
       crypto: require.resolve('crypto-browserify'),

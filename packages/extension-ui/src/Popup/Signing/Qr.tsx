@@ -1,18 +1,18 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ExtrinsicPayload } from '@polkadot/types/interfaces';
 import type { HexString } from '@polkadot/util/types';
 
 import React, { useCallback, useMemo, useState } from 'react';
-import styled from 'styled-components';
 
-import { wrapBytes } from '@polkadot/extension-dapp/wrapBytes';
 import { QrDisplayPayload, QrScanSignature } from '@polkadot/react-qr';
+import { u8aWrapBytes } from '@polkadot/util';
 
-import { Button } from '../../components';
-import useTranslation from '../../hooks/useTranslation';
-import { CMD_MORTAL, CMD_SIGN_MESSAGE } from './Request';
+import { Button } from '../../components/index.js';
+import { useTranslation } from '../../hooks/index.js';
+import { styled } from '../../styled.js';
+import { CMD_MORTAL, CMD_SIGN_MESSAGE } from './Request/index.js';
 
 interface Props {
   address: string;
@@ -35,7 +35,7 @@ function Qr ({ address, className, cmd, genesisHash, onSignature, payload }: Pro
         case CMD_MORTAL:
           return (payload as ExtrinsicPayload).toU8a();
         case CMD_SIGN_MESSAGE:
-          return wrapBytes(payload as string);
+          return u8aWrapBytes(payload as string);
         default:
           return null;
       }
@@ -78,7 +78,7 @@ function Qr ({ address, className, cmd, genesisHash, onSignature, payload }: Pro
           className='scanButton'
           onClick={_onShowQr}
         >
-          {t<string>('Scan signature via camera')}
+          {t('Scan signature via camera')}
         </Button>
       )}
     </div>

@@ -1,21 +1,33 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter, Route } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 
-import { Button, themes } from '../components';
-import * as messaging from '../messaging';
-import { flushAllPromises } from '../testHelpers';
-import Export from './Export';
+import { Button, themes } from '../components/index.js';
+import * as messaging from '../messaging.js';
+import { flushAllPromises } from '../testHelpers.js';
+import Export from './Export.js';
+
+const { configure, mount } = enzyme;
+
+// // NOTE Required for spyOn when using @swc/jest
+// // https://github.com/swc-project/swc/issues/3843
+// jest.mock('../messaging', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../messaging')
+// }));
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
 configure({ adapter: new Adapter() });
@@ -29,7 +41,7 @@ describe('Export component', () => {
   };
 
   beforeEach(() => {
-    jest.spyOn(messaging, 'exportAccount').mockResolvedValue({ exportedJson: { meta: { name: 'account_name' } } as unknown as KeyringPair$Json });
+    jest.spyOn(messaging, 'exportAccount').mockImplementation(() => Promise.resolve({ exportedJson: { meta: { name: 'account_name' } } as unknown as KeyringPair$Json }));
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     wrapper = mount(

@@ -1,9 +1,13 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/* global chrome */
+/* eslint-disable no-redeclare */
 
 import type { AccountJson, AllowedPath, AuthorizeRequest, ConnectedTabsUrlResponse, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@polkadot/extension-base/background/types';
 import type { Message } from '@polkadot/extension-base/types';
 import type { Chain } from '@polkadot/extension-chains/types';
+import type { MetadataDef } from '@polkadot/extension-inject/types';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { HexString } from '@polkadot/util/types';
@@ -12,10 +16,9 @@ import type { KeypairType } from '@polkadot/util-crypto/types';
 import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
 import { getId } from '@polkadot/extension-base/utils/getId';
 import { metadataExpand } from '@polkadot/extension-chains';
-import { MetadataDef } from '@polkadot/extension-inject/types';
 
-import allChains from './util/chains';
-import { getSavedMeta, setSavedMeta } from './MetadataCache';
+import allChains from './util/chains.js';
+import { getSavedMeta, setSavedMeta } from './MetadataCache.js';
 
 interface Handler {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,7 +78,7 @@ export async function showAccount (address: string, isShowing: boolean): Promise
   return sendMessage('pri(accounts.show)', { address, isShowing });
 }
 
-export async function tieAccount (address: string, genesisHash: string | null): Promise<boolean> {
+export async function tieAccount (address: string, genesisHash: HexString | null): Promise<boolean> {
   return sendMessage('pri(accounts.tie)', { address, genesisHash });
 }
 
@@ -119,15 +122,15 @@ export async function approveSignSignature (id: string, signature: HexString): P
   return sendMessage('pri(signing.approve.signature)', { id, signature });
 }
 
-export async function createAccountExternal (name: string, address: string, genesisHash: string): Promise<boolean> {
+export async function createAccountExternal (name: string, address: string, genesisHash: HexString | null): Promise<boolean> {
   return sendMessage('pri(accounts.create.external)', { address, genesisHash, name });
 }
 
-export async function createAccountHardware (address: string, hardwareType: string, accountIndex: number, addressOffset: number, name: string, genesisHash: string): Promise<boolean> {
+export async function createAccountHardware (address: string, hardwareType: string, accountIndex: number, addressOffset: number, name: string, genesisHash: HexString): Promise<boolean> {
   return sendMessage('pri(accounts.create.hardware)', { accountIndex, address, addressOffset, genesisHash, hardwareType, name });
 }
 
-export async function createAccountSuri (name: string, password: string, suri: string, type?: KeypairType, genesisHash?: string): Promise<boolean> {
+export async function createAccountSuri (name: string, password: string, suri: string, type?: KeypairType, genesisHash?: HexString | null): Promise<boolean> {
   return sendMessage('pri(accounts.create.suri)', { genesisHash, name, password, suri, type });
 }
 
@@ -135,7 +138,7 @@ export async function createSeed (length?: SeedLengths, seed?: string, type?: Ke
   return sendMessage('pri(seed.create)', { length, seed, type });
 }
 
-export async function getAllMetatdata (): Promise<MetadataDef[]> {
+export async function getAllMetadata (): Promise<MetadataDef[]> {
   return sendMessage('pri(metadata.list)');
 }
 
@@ -220,7 +223,7 @@ export async function validateDerivationPath (parentAddress: string, suri: strin
   return sendMessage('pri(derivation.validate)', { parentAddress, parentPassword, suri });
 }
 
-export async function deriveAccount (parentAddress: string, suri: string, parentPassword: string, name: string, password: string, genesisHash: string | null): Promise<boolean> {
+export async function deriveAccount (parentAddress: string, suri: string, parentPassword: string, name: string, password: string, genesisHash: HexString | null): Promise<boolean> {
   return sendMessage('pri(derivation.create)', { genesisHash, name, parentAddress, parentPassword, password, suri });
 }
 
@@ -242,4 +245,8 @@ export async function batchRestore (file: KeyringPairs$Json, password: string): 
 
 export async function setNotification (notification: string): Promise<boolean> {
   return sendMessage('pri(settings.notification)', notification);
+}
+
+export async function ping (): Promise<boolean> {
+  return sendMessage('pri(ping)', null);
 }

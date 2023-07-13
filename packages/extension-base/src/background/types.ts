@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable no-use-before-define */
@@ -6,15 +6,12 @@
 import type { InjectedAccount, InjectedMetadataKnown, MetadataDef, ProviderList, ProviderMeta } from '@polkadot/extension-inject/types';
 import type { KeyringPair, KeyringPair$Json, KeyringPair$Meta } from '@polkadot/keyring/types';
 import type { JsonRpcResponse } from '@polkadot/rpc-provider/types';
-import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
+import type { Registry, SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { HexString } from '@polkadot/util/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
-
-import { TypeRegistry } from '@polkadot/types';
-
-import { ALLOWED_PATH } from '../defaults';
-import { AuthResponse, AuthUrls } from './handlers/State';
+import type { ALLOWED_PATH } from '../defaults.js';
+import type { AuthResponse } from './handlers/State.js';
 
 type KeysWithDefinedValues<T> = {
   [K in keyof T]: T[K] extends undefined ? never : K
@@ -28,20 +25,22 @@ type IsNull<T, K extends keyof T> = { [K1 in Exclude<keyof T, K>]: T[K1] } & T[K
 
 type NullKeys<T> = { [K in keyof T]: IsNull<T, K> }[keyof T];
 
+export type AuthUrls = Record<string, AuthUrlInfo>;
+
+export interface AuthUrlInfo {
+  count: number;
+  id: string;
+  // this is from pre-0.44.1
+  isAllowed?: boolean;
+  origin: string;
+  url: string;
+  authorizedAccounts: string[];
+}
+
 export type SeedLengths = 12 | 24;
 
 export interface AccountJson extends KeyringPair$Meta {
   address: string;
-  genesisHash?: string | null;
-  isExternal?: boolean;
-  isHardware?: boolean;
-  isHidden?: boolean;
-  isDefaultAuthSelected?: boolean
-  name?: string;
-  parentAddress?: string;
-  suri?: string;
-  type?: KeypairType;
-  whenCreated?: number;
 }
 
 export type AccountWithChildren = AccountJson & {
@@ -111,6 +110,7 @@ export interface RequestSignatures {
   'pri(metadata.reject)': [RequestMetadataReject, boolean];
   'pri(metadata.requests)': [RequestMetadataSubscribe, boolean, MetadataRequest[]];
   'pri(metadata.list)': [null, MetadataDef[]];
+  'pri(ping)': [null, boolean];
   'pri(seed.create)': [RequestSeedCreate, ResponseSeedCreate];
   'pri(seed.validate)': [RequestSeedValidate, ResponseSeedValidate];
   'pri(settings.notification)': [string, boolean];
@@ -130,10 +130,11 @@ export interface RequestSignatures {
   'pub(metadata.list)': [null, InjectedMetadataKnown[]];
   'pub(metadata.provide)': [MetadataDef, boolean];
   'pub(phishing.redirectIfDenied)': [null, boolean];
+  'pub(ping)': [null, boolean];
   'pub(rpc.listProviders)': [void, ResponseRpcListProviders];
-  'pub(rpc.send)': [RequestRpcSend, JsonRpcResponse];
+  'pub(rpc.send)': [RequestRpcSend, JsonRpcResponse<unknown>];
   'pub(rpc.startProvider)': [string, ProviderMeta];
-  'pub(rpc.subscribe)': [RequestRpcSubscribe, number, JsonRpcResponse];
+  'pub(rpc.subscribe)': [RequestRpcSubscribe, number, JsonRpcResponse<unknown>];
   'pub(rpc.subscribeConnected)': [null, boolean, boolean];
   'pub(rpc.unsubscribe)': [RequestRpcUnsubscribe, boolean];
 }
@@ -183,13 +184,13 @@ export type RequestMetadataSubscribe = null;
 
 export interface RequestAccountCreateExternal {
   address: string;
-  genesisHash?: string | null;
+  genesisHash?: HexString | null;
   name: string;
 }
 
 export interface RequestAccountCreateSuri {
   name: string;
-  genesisHash?: string | null;
+  genesisHash?: HexString | null;
   password: string;
   suri: string;
   type?: KeypairType;
@@ -199,7 +200,7 @@ export interface RequestAccountCreateHardware {
   accountIndex: number;
   address: string;
   addressOffset: number;
-  genesisHash: string;
+  genesisHash: HexString;
   hardwareType: string;
   name: string;
 }
@@ -212,7 +213,7 @@ export interface RequestAccountChangePassword {
 
 export interface RequestAccountEdit {
   address: string;
-  genesisHash?: string | null;
+  genesisHash?: HexString | null;
   name: string;
 }
 
@@ -227,7 +228,7 @@ export interface RequestAccountShow {
 
 export interface RequestAccountTie {
   address: string;
-  genesisHash: string | null;
+  genesisHash: HexString | null;
 }
 
 export interface RequestAccountValidate {
@@ -237,7 +238,7 @@ export interface RequestAccountValidate {
 
 export interface RequestDeriveCreate {
   name: string;
-  genesisHash?: string | null;
+  genesisHash?: HexString | null;
   suri: string;
   parentAddress: string;
   parentPassword: string;
@@ -396,7 +397,7 @@ export type MessageTypesWithNoSubscriptions = Exclude<MessageTypes, keyof Subscr
 export interface RequestSign {
   readonly payload: SignerPayloadJSON | SignerPayloadRaw;
 
-  sign (registry: TypeRegistry, pair: KeyringPair): { signature: HexString };
+  sign (registry: Registry, pair: KeyringPair): { signature: HexString };
 }
 
 export interface RequestJsonRestore {
@@ -418,7 +419,7 @@ export type AllowedPath = typeof ALLOWED_PATH[number];
 export interface ResponseJsonGetAccountInfo {
   address: string;
   name: string;
-  genesisHash: string;
+  genesisHash: HexString;
   type: KeypairType;
 }
 

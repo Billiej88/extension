@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ExtrinsicPayload } from '@polkadot/types/interfaces';
@@ -7,11 +7,10 @@ import type { HexString } from '@polkadot/util/types';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 
-import { Button, Warning } from '../../components';
-import { useLedger } from '../../hooks/useLedger';
-import useTranslation from '../../hooks/useTranslation';
+import { Button, Warning } from '../../components/index.js';
+import { useLedger, useTranslation } from '../../hooks/index.js';
+import { styled } from '../../styled.js';
 
 interface Props {
   accountIndex?: number;
@@ -78,7 +77,7 @@ function LedgerSign ({ accountIndex, addressOffset, className, error, genesisHas
             onClick={_onRefresh}
           >
             <FontAwesomeIcon icon={faSync} />
-            {t<string>('Refresh')}
+            {t('Refresh')}
           </Button>
         )
         : (
@@ -86,7 +85,7 @@ function LedgerSign ({ accountIndex, addressOffset, className, error, genesisHas
             isBusy={isBusy || ledgerLoading}
             onClick={_onSignLedger}
           >
-            {t<string>('Sign on Ledger')}
+            {t('Sign on Ledger')}
           </Button>
         )
       }

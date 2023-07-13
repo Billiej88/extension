@@ -1,17 +1,18 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
+import type { RouteComponentProps } from 'react-router';
+import type { ThemeProps } from '../types.js';
 
-import { saveAs } from 'file-saver';
+import fileSaver from 'file-saver';
 import React, { useCallback, useContext, useState } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
-import styled from 'styled-components';
+import { withRouter } from 'react-router';
 
-import { AccountContext, ActionBar, ActionContext, ActionText, Button, InputWithLabel, Warning } from '../components';
-import useTranslation from '../hooks/useTranslation';
-import { exportAccounts } from '../messaging';
-import { Header } from '../partials';
+import { AccountContext, ActionBar, ActionContext, ActionText, Button, InputWithLabel, Warning } from '../components/index.js';
+import { useTranslation } from '../hooks/index.js';
+import { exportAccounts } from '../messaging.js';
+import { Header } from '../partials/index.js';
+import { styled } from '../styled.js';
 
 const MIN_LENGTH = 6;
 
@@ -47,7 +48,8 @@ function ExportAll ({ className }: Props): React.ReactElement<Props> {
         .then(({ exportedJson }) => {
           const blob = new Blob([JSON.stringify(exportedJson)], { type: 'application/json; charset=utf-8' });
 
-          saveAs(blob, `batch_exported_account_${Date.now()}.json`);
+          // eslint-disable-next-line deprecation/deprecation
+          fileSaver.saveAs(blob, `batch_exported_account_${Date.now()}.json`);
 
           onAction('/');
         })
@@ -64,7 +66,7 @@ function ExportAll ({ className }: Props): React.ReactElement<Props> {
     <>
       <Header
         showBackArrow
-        text={t<string>('All account')}
+        text={t('All account')}
       />
       <div className={className}>
         <div className='actionArea'>
@@ -72,7 +74,7 @@ function ExportAll ({ className }: Props): React.ReactElement<Props> {
             data-export-all-password
             disabled={isBusy}
             isError={pass.length < MIN_LENGTH || !!error}
-            label={t<string>('password for encrypting all accounts')}
+            label={t('password for encrypting all accounts')}
             onChange={onPassChange}
             type='password'
           />
@@ -92,13 +94,13 @@ function ExportAll ({ className }: Props): React.ReactElement<Props> {
             isDisabled={pass.length === 0 || !!error}
             onClick={_onExportAllButtonClick}
           >
-            {t<string>('I want to export all my accounts')}
+            {t('I want to export all my accounts')}
           </Button>
           <ActionBar className='withMarginTop'>
             <ActionText
               className='center'
               onClick={_goHome}
-              text={t<string>('Cancel')}
+              text={t('Cancel')}
             />
           </ActionBar>
         </div>

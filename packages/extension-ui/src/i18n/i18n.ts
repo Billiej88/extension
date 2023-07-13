@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import i18next from 'i18next';
@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next';
 
 import uiSettings from '@polkadot/ui-settings';
 
-import Backend from './Backend';
+import Backend from './Backend.js';
 
 i18next
   .use(initReactI18next)

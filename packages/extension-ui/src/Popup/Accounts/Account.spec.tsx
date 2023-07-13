@@ -1,24 +1,38 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
+import type { Theme } from '../../components/index.js';
+
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 
-import { Theme, themes } from '../../components';
-import * as messaging from '../../messaging';
-import { flushAllPromises } from '../../testHelpers';
-import Account from './Account';
+import { themes } from '../../components/index.js';
+import * as messaging from '../../messaging.js';
+import { flushAllPromises } from '../../testHelpers.js';
+import Account from './Account.js';
+
+const { configure, mount } = enzyme;
+
+// // NOTE Required for spyOn when using @swc/jest
+// // https://github.com/swc-project/swc/issues/3843
+// jest.mock('../../messaging', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../../messaging')
+// }));
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
 configure({ adapter: new Adapter() });
 
-jest.spyOn(messaging, 'getAllMetatdata').mockResolvedValue([]);
+jest.spyOn(messaging, 'getAllMetadata').mockImplementation(() => Promise.resolve([]));
 
 describe('Account component', () => {
   let wrapper: ReactWrapper;

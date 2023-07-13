@@ -1,20 +1,21 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { HexString } from '@polkadot/util/types';
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
-import { AccountContext, ActionContext, Address } from '../../components';
-import AccountNamePasswordCreation from '../../components/AccountNamePasswordCreation';
-import useMetadata from '../../hooks/useMetadata';
-import useTranslation from '../../hooks/useTranslation';
-import { createAccountSuri } from '../../messaging';
-import { HeaderWithSteps } from '../../partials';
-import { DEFAULT_TYPE } from '../../util/defaultType';
-import SeedAndPath from './SeedAndPath';
+import AccountNamePasswordCreation from '../../components/AccountNamePasswordCreation.js';
+import { AccountContext, ActionContext, Address } from '../../components/index.js';
+import { useMetadata, useTranslation } from '../../hooks/index.js';
+import { createAccountSuri } from '../../messaging.js';
+import { HeaderWithSteps } from '../../partials/index.js';
+import { DEFAULT_TYPE } from '../../util/defaultType.js';
+import SeedAndPath from './SeedAndPath.js';
 
 export interface AccountInfo {
   address: string;
-  genesis?: string;
+  genesis?: HexString;
   suri: string;
 }
 
@@ -69,7 +70,7 @@ function ImportSeed (): React.ReactElement {
     <>
       <HeaderWithSteps
         step={step1 ? 1 : 2}
-        text={t<string>('Import account')}
+        text={t('Import account')}
       />
       <div>
         <Address
@@ -88,7 +89,7 @@ function ImportSeed (): React.ReactElement {
         )
         : (
           <AccountNamePasswordCreation
-            buttonLabel={t<string>('Add the account with the supplied seed')}
+            buttonLabel={t('Add the account with the supplied seed')}
             isBusy={isBusy}
             onBackClick={_onBackClick}
             onCreate={_onCreate}

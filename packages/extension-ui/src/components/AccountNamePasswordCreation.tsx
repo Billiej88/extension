@@ -1,10 +1,10 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback, useState } from 'react';
 
-import { Name, Password } from '../partials';
-import { BackButton, ButtonArea, NextStepButton, VerticalSpace } from '.';
+import { Name, Password } from '../partials/index.js';
+import { BackButton, ButtonArea, NextStepButton, VerticalSpace } from './index.js';
 
 interface Props {
   buttonLabel?: string;

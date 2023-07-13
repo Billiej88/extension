@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 // We _could_ reformat, but just keep it as-is, since this is actually
@@ -7,10 +7,11 @@
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-max-props-per-line */
 
-import type { ThemeProps } from '../../types';
+import type { ThemeProps } from '../../types.js';
 
 import React from 'react';
-import styled from 'styled-components';
+
+import { styled } from '../../styled.js';
 
 interface Props extends ThemeProps {
   className?: string;

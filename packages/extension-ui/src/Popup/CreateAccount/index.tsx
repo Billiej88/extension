@@ -1,18 +1,18 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import type { HexString } from '@polkadot/util/types';
 
-import { ActionContext, Address, Dropdown, Loading } from '../../components';
-import AccountNamePasswordCreation from '../../components/AccountNamePasswordCreation';
-import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
-import useMetadata from '../../hooks/useMetadata';
-import useTranslation from '../../hooks/useTranslation';
-import { createAccountSuri, createSeed, validateSeed } from '../../messaging';
-import { HeaderWithSteps } from '../../partials';
-import { DEFAULT_TYPE } from '../../util/defaultType';
-import Mnemonic from './Mnemonic';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+
+import AccountNamePasswordCreation from '../../components/AccountNamePasswordCreation.js';
+import { ActionContext, Address, Dropdown, Loading } from '../../components/index.js';
+import { useGenesisHashOptions, useMetadata, useTranslation } from '../../hooks/index.js';
+import { createAccountSuri, createSeed, validateSeed } from '../../messaging.js';
+import { HeaderWithSteps } from '../../partials/index.js';
+import { styled } from '../../styled.js';
+import { DEFAULT_TYPE } from '../../util/defaultType.js';
+import Mnemonic from './Mnemonic.js';
 
 interface Props {
   className?: string;
@@ -28,7 +28,7 @@ function CreateAccount ({ className }: Props): React.ReactElement {
   const [type, setType] = useState(DEFAULT_TYPE);
   const [name, setName] = useState('');
   const options = useGenesisHashOptions();
-  const [genesisHash, setGenesis] = useState('');
+  const [genesisHash, setGenesis] = useState<HexString | null>(null);
   const chain = useMetadata(genesisHash, true);
 
   useEffect((): void => {
@@ -82,7 +82,7 @@ function CreateAccount ({ className }: Props): React.ReactElement {
   );
 
   const _onChangeNetwork = useCallback(
-    (newGenesisHash: string) => setGenesis(newGenesisHash),
+    (newGenesisHash: HexString) => setGenesis(newGenesisHash),
     []
   );
 
@@ -90,7 +90,7 @@ function CreateAccount ({ className }: Props): React.ReactElement {
     <>
       <HeaderWithSteps
         step={step}
-        text={t<string>('Create an account')}
+        text={t('Create an account')}
       />
       <Loading>
         <div>
@@ -112,13 +112,13 @@ function CreateAccount ({ className }: Props): React.ReactElement {
               <>
                 <Dropdown
                   className={className}
-                  label={t<string>('Network')}
+                  label={t('Network')}
                   onChange={_onChangeNetwork}
                   options={options}
                   value={genesisHash}
                 />
                 <AccountNamePasswordCreation
-                  buttonLabel={t<string>('Add the account with the generated seed')}
+                  buttonLabel={t('Add the account with the generated seed')}
                   isBusy={isBusy}
                   onBackClick={_onPreviousStep}
                   onCreate={_onCreate}

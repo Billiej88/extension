@@ -1,23 +1,35 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
 import type { AccountJson, ResponseDeriveValidate } from '@polkadot/extension-base/background/types';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter, Route } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 
-import { AccountContext, ActionContext, themes } from '../../components';
-import * as messaging from '../../messaging';
-import { flushAllPromises } from '../../testHelpers';
-import { buildHierarchy } from '../../util/buildHierarchy';
-import AddressDropdown from './AddressDropdown';
-import Derive from '.';
+import { AccountContext, ActionContext, themes } from '../../components/index.js';
+import * as messaging from '../../messaging.js';
+import { flushAllPromises } from '../../testHelpers.js';
+import { buildHierarchy } from '../../util/buildHierarchy.js';
+import AddressDropdown from './AddressDropdown.js';
+import Derive from './index.js';
+
+const { configure, mount } = enzyme;
+
+// // NOTE Required for spyOn when using @swc/jest
+// // https://github.com/swc-project/swc/issues/3843
+// jest.mock('../../messaging', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../../messaging')
+// }));
 
 // For this file, there are a lot of them
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -43,7 +55,7 @@ const accounts = [
 describe('Derive', () => {
   const mountComponent = async (locked = false, account = 1): Promise<{
     wrapper: ReactWrapper;
-    onActionStub: jest.Mock;
+    onActionStub: ReturnType<typeof jest.fn>;
   }> => {
     const onActionStub = jest.fn();
 
@@ -72,7 +84,7 @@ describe('Derive', () => {
   };
 
   let wrapper: ReactWrapper;
-  let onActionStub: jest.Mock;
+  let onActionStub: ReturnType<typeof jest.fn>;
 
   const type = async (input: ReactWrapper, value: string): Promise<void> => {
     input.simulate('change', { target: { value } });
@@ -93,7 +105,7 @@ describe('Derive', () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/require-await
-    jest.spyOn(messaging, 'validateAccount').mockImplementation(async (_, pass: string) => pass === parentPassword);
+    jest.spyOn(messaging, 'validateAccount').mockImplementation(async (_, pass) => pass === parentPassword);
     // silencing the following expected console.error
     console.error = jest.fn();
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -249,7 +261,7 @@ describe('Derive', () => {
     it('redirects to derive from next account when other option is selected', () => {
       wrapper.find('[data-parent-option]').first().simulate('click');
 
-      expect(onActionStub).toBeCalledWith(`/account/derive/${accounts[0].address}`);
+      expect(onActionStub).toHaveBeenCalledWith(`/account/derive/${accounts[0].address}`);
     });
   });
 
@@ -286,8 +298,8 @@ describe('Derive', () => {
         await act(flushAllPromises);
         wrapper.update();
 
-        expect(deriveMock).toBeCalledWith(accounts[1].address, defaultDerivation, parentPassword, newAccount.name, newAccount.password, westendGenesis);
-        expect(onActionStub).toBeCalledWith('/');
+        expect(deriveMock).toHaveBeenCalledWith(accounts[1].address, defaultDerivation, parentPassword, newAccount.name, newAccount.password, westendGenesis);
+        expect(onActionStub).toHaveBeenCalledWith('/');
       });
     });
   });

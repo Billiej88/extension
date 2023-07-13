@@ -1,21 +1,25 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
 import type { ReactWrapper } from 'enzyme';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { flushAllPromises } from '../testHelpers';
-import BackButton from './BackButton';
-import { AccountNamePasswordCreation, Input, InputWithLabel, NextStepButton } from '.';
+import { flushAllPromises } from '../testHelpers.js';
+import BackButton from './BackButton.js';
+import { AccountNamePasswordCreation, Input, InputWithLabel, NextStepButton } from './index.js';
 
 // For this file, there are a lot of them
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+const { configure, mount } = enzyme;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
 configure({ adapter: new Adapter() });
@@ -149,7 +153,7 @@ describe('AccountNamePasswordCreation', () => {
     wrapper.find('[data-button-action="add new root"] button').simulate('click');
     await act(flushAllPromises);
 
-    expect(onCreate).toBeCalledWith(account.name, account.password);
+    expect(onCreate).toHaveBeenCalledWith(account.name, account.password);
   });
 
   describe('All fields are filled correctly, but then', () => {

@@ -1,16 +1,16 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { canDerive } from '@polkadot/extension-base/utils';
 
-import { AccountContext, ActionContext, Address, ButtonArea, InputWithLabel, Label, NextStepButton, VerticalSpace, Warning } from '../../components';
-import useTranslation from '../../hooks/useTranslation';
-import { validateAccount, validateDerivationPath } from '../../messaging';
-import { nextDerivationPath } from '../../util/nextDerivationPath';
-import AddressDropdown from './AddressDropdown';
-import DerivationPath from './DerivationPath';
+import { AccountContext, ActionContext, Address, ButtonArea, InputWithLabel, Label, NextStepButton, VerticalSpace, Warning } from '../../components/index.js';
+import { useTranslation } from '../../hooks/index.js';
+import { validateAccount, validateDerivationPath } from '../../messaging.js';
+import { nextDerivationPath } from '../../util/nextDerivationPath.js';
+import AddressDropdown from './AddressDropdown.js';
+import DerivationPath from './DerivationPath.js';
 
 interface Props {
   className?: string;
@@ -129,7 +129,7 @@ export default function SelectParent ({ className, isLocked, onDerivationConfirm
             />
           )
           : (
-            <Label label={t<string>('Choose Parent Account:')}>
+            <Label label={t('Choose Parent Account:')}>
               <AddressDropdown
                 allAddresses={allAddresses}
                 onSelect={_onParentChange}
@@ -144,7 +144,7 @@ export default function SelectParent ({ className, isLocked, onDerivationConfirm
             data-input-password
             isError={!!parentPassword && !isProperParentPassword}
             isFocused
-            label={t<string>('enter the password for the account you want to derive from')}
+            label={t('enter the password for the account you want to derive from')}
             onChange={_onParentPasswordEnter}
             type='password'
             value={parentPassword}
@@ -187,7 +187,7 @@ export default function SelectParent ({ className, isLocked, onDerivationConfirm
           isDisabled={!isProperParentPassword || !!pathError}
           onClick={_onSubmit}
         >
-          {t<string>('Create a derived account')}
+          {t('Create a derived account')}
         </NextStepButton>
       </ButtonArea>
     </>

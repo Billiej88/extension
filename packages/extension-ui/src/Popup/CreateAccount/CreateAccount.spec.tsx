@@ -1,19 +1,32 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
+
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { ThemeProvider } from 'styled-components';
 
-import { ActionContext, ActionText, Button, themes } from '../../components';
-import * as messaging from '../../messaging';
-import { Header } from '../../partials';
-import { flushAllPromises } from '../../testHelpers';
-import CreateAccount from '.';
+import { ActionContext, ActionText, Button, themes } from '../../components/index.js';
+import * as messaging from '../../messaging.js';
+import { Header } from '../../partials/index.js';
+import { flushAllPromises } from '../../testHelpers.js';
+import CreateAccount from './index.js';
+
+const { configure, mount } = enzyme;
+
+// // NOTE Required for spyOn when using @swc/jest
+// // https://github.com/swc-project/swc/issues/3843
+// jest.mock('../../messaging', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../../messaging')
+// }));
 
 // For this file, there are a lot of them
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -23,7 +36,7 @@ configure({ adapter: new Adapter() });
 
 describe('Create Account', () => {
   let wrapper: ReactWrapper;
-  let onActionStub: jest.Mock;
+  let onActionStub: ReturnType<typeof jest.fn>;
   const exampleAccount = {
     address: 'HjoBp62cvsWDA3vtNMWxz6c9q13ReEHi9UGHK7JbZweH5g5',
     seed: 'horse battery staple correct'
@@ -51,16 +64,16 @@ describe('Create Account', () => {
 
   beforeEach(async () => {
     onActionStub = jest.fn();
-    jest.spyOn(messaging, 'createSeed').mockResolvedValue(exampleAccount);
-    jest.spyOn(messaging, 'createAccountSuri').mockResolvedValue(true);
+    jest.spyOn(messaging, 'createSeed').mockImplementation(() => Promise.resolve(exampleAccount));
+    jest.spyOn(messaging, 'createAccountSuri').mockImplementation(() => Promise.resolve(true));
     wrapper = mountComponent();
     await act(flushAllPromises);
     wrapper.update();
   });
 
   describe('Phase 1', () => {
-    it('shows seed phrase in textarea', () => {
-      expect(wrapper.find('textarea').text()).toBe(exampleAccount.seed);
+    it('shows seed phrase in a span inside a div', () => {
+      expect(wrapper.find('.seedBox span').text()).toBe(exampleAccount.seed);
     });
 
     it('next step button is disabled when checkbox is not checked', () => {
@@ -73,7 +86,7 @@ describe('Create Account', () => {
 
     it('clicking "Cancel" redirects to main screen', () => {
       wrapper.find(Header).find(ActionText).simulate('click');
-      expect(onActionStub).toBeCalledWith('/');
+      expect(onActionStub).toHaveBeenCalledWith('/');
     });
 
     it('checking the checkbox enables the Next button', () => {
@@ -108,8 +121,8 @@ describe('Create Account', () => {
       wrapper.find('[data-button-action="add new root"] button').simulate('click');
       await act(flushAllPromises);
 
-      expect(messaging.createAccountSuri).toBeCalledWith('abc', 'abcdef', exampleAccount.seed, 'sr25519', kusamaGenesis);
-      expect(onActionStub).toBeCalledWith('/');
+      expect(messaging.createAccountSuri).toHaveBeenCalledWith('abc', 'abcdef', exampleAccount.seed, 'sr25519', kusamaGenesis);
+      expect(onActionStub).toHaveBeenCalledWith('/');
     });
   });
 });

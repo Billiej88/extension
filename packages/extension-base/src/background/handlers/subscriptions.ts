@@ -1,7 +1,9 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { MessageTypesWithSubscriptions, SubscriptionMessageTypes } from '../types';
+/* global chrome */
+
+import type { MessageTypesWithSubscriptions, SubscriptionMessageTypes } from '../types.js';
 
 type Subscriptions = Record<string, chrome.runtime.Port>;
 

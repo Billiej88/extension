@@ -1,12 +1,12 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
+import type { ThemeProps } from '../types.js';
 
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
 
-import Spinner from './Spinner';
+import { styled } from '../styled.js';
+import Spinner from './Spinner.js';
 
 interface Props extends ThemeProps {
   className?: string;
@@ -25,7 +25,7 @@ function Button ({ children, className = '', isBusy, isDisabled, onClick, to }: 
         return;
       }
 
-      onClick && onClick();
+      onClick && Promise.resolve(onClick()).catch(console.error);
 
       if (to) {
         window.location.hash = to;

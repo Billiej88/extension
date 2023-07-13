@@ -1,16 +1,15 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { MetadataDef } from '@polkadot/extension-inject/types';
-import type { ThemeProps } from '../../types';
+import type { ThemeProps } from '../../types.js';
 
 import React, { useCallback, useContext } from 'react';
-import styled from 'styled-components';
 
-import { ActionBar, ActionContext, Button, Link, Table, Warning } from '../../components';
-import useMetadata from '../../hooks/useMetadata';
-import useTranslation from '../../hooks/useTranslation';
-import { approveMetaRequest, rejectMetaRequest } from '../../messaging';
+import { ActionBar, ActionContext, Button, Link, Table, Warning } from '../../components/index.js';
+import { useMetadata, useTranslation } from '../../hooks/index.js';
+import { approveMetaRequest, rejectMetaRequest } from '../../messaging.js';
+import { styled } from '../../styled.js';
 
 interface Props {
   className?: string;
@@ -46,46 +45,46 @@ function Request ({ className, metaId, request, url }: Props): React.ReactElemen
     <div className={className}>
       <Table>
         <tr>
-          <td className='label'>{t<string>('from')}</td>
+          <td className='label'>{t('from')}</td>
           <td className='data'>{url}</td>
         </tr>
         <tr>
-          <td className='label'>{t<string>('chain')}</td>
+          <td className='label'>{t('chain')}</td>
           <td className='data'>{request.chain}</td>
         </tr>
         <tr>
-          <td className='label'>{t<string>('icon')}</td>
+          <td className='label'>{t('icon')}</td>
           <td className='data'>{request.icon}</td>
         </tr>
         <tr>
-          <td className='label'>{t<string>('decimals')}</td>
+          <td className='label'>{t('decimals')}</td>
           <td className='data'>{request.tokenDecimals}</td>
         </tr>
         <tr>
-          <td className='label'>{t<string>('symbol')}</td>
+          <td className='label'>{t('symbol')}</td>
           <td className='data'>{request.tokenSymbol}</td>
         </tr>
         <tr>
-          <td className='label'>{t<string>('upgrade')}</td>
+          <td className='label'>{t('upgrade')}</td>
           <td className='data'>{chain ? chain.specVersion : t('<unknown>')} -&gt; {request.specVersion}</td>
         </tr>
       </Table>
       <div className='requestInfo'>
         <Warning className='requestWarning'>
-          {t<string>('This approval will add the metadata to your extension instance, allowing future requests to be decoded using this metadata.')}
+          {t('This approval will add the metadata to your extension instance, allowing future requests to be decoded using this metadata.')}
         </Warning>
         <Button
           className='btnAccept'
           onClick={_onApprove}
         >
-          {t<string>('Yes, do this metadata update')}
+          {t('Yes, do this metadata update')}
         </Button>
         <ActionBar className='btnReject'>
           <Link
             isDanger
             onClick={_onReject}
           >
-            {t<string>('Reject')}
+            {t('Reject')}
           </Link>
         </ActionBar>
       </div>

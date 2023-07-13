@@ -1,18 +1,17 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
+import type { AuthUrlInfo, AuthUrls } from '@polkadot/extension-base/background/types';
+import type { ThemeProps } from '../../types.js';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
 
-import { AuthUrlInfo, AuthUrls } from '@polkadot/extension-base/background/handlers/State';
-import { InputFilter } from '@polkadot/extension-ui/components';
-
-import useTranslation from '../../hooks/useTranslation';
-import { getAuthList, removeAuthorization } from '../../messaging';
-import { Header } from '../../partials';
-import WebsiteEntry from './WebsiteEntry';
+import InputFilter from '../../components/InputFilter.js';
+import { useTranslation } from '../../hooks/index.js';
+import { getAuthList, removeAuthorization } from '../../messaging.js';
+import { Header } from '../../partials/index.js';
+import { styled } from '../../styled.js';
+import WebsiteEntry from './WebsiteEntry.js';
 
 interface Props extends ThemeProps {
   className?: string;
@@ -49,19 +48,19 @@ function AuthManagement ({ className }: Props): React.ReactElement<Props> {
       <Header
         showBackArrow
         smallMargin
-        text={t<string>('Manage Website Access')}
+        text={t('Manage Website Access')}
       />
       <div className={className}>
         <InputFilter
           className='inputFilter'
           onChange={_onChangeFilter}
-          placeholder={t<string>('example.com')}
+          placeholder={t('example.com')}
           value={filter}
           withReset
         />
         {
           !authList || !hasAuthList
-            ? <div className='empty-list'>{t<string>('No website request yet!')}</div>
+            ? <div className='empty-list'>{t('No website request yet!')}</div>
             : (
               <>
                 <div className='website-list'>

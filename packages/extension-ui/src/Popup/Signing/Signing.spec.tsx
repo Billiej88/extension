@@ -1,27 +1,44 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
 import type { SigningRequest } from '@polkadot/extension-base/background/types';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import { EventEmitter } from 'events';
 import React, { useState } from 'react';
 import { act } from 'react-dom/test-utils';
 import { ThemeProvider } from 'styled-components';
 
-import { ActionContext, Address, Button, Input, SigningReqContext, themes } from '../../components';
-import * as messaging from '../../messaging';
-import * as MetadataCache from '../../MetadataCache';
-import { flushAllPromises } from '../../testHelpers';
-import Extrinsic from './Extrinsic';
-import { westendMetadata } from './metadataMock';
-import Qr from './Qr';
-import Request from './Request';
-import TransactionIndex from './TransactionIndex';
-import Signing from '.';
+import { ActionContext, Address, Button, Input, SigningReqContext, themes } from '../../components/index.js';
+import * as messaging from '../../messaging.js';
+import * as MetadataCache from '../../MetadataCache.js';
+import { flushAllPromises } from '../../testHelpers.js';
+import Request from './Request/index.js';
+import Extrinsic from './Extrinsic.js';
+import Signing from './index.js';
+import { westendMetadata } from './metadataMock.js';
+import Qr from './Qr.js';
+import TransactionIndex from './TransactionIndex.js';
+
+const { configure, mount } = enzyme;
+
+// // NOTE Required for spyOn when using @swc/jest
+// // https://github.com/swc-project/swc/issues/3843
+// jest.mock('../../messaging', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../../messaging')
+// }));
+
+// jest.mock('../../MetadataCache', (): Record<string, unknown> => ({
+//   __esModule: true,
+//   ...jest.requireActual('../../MetadataCache')
+// }));
 
 // For this file, there are a lot of them
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -31,7 +48,7 @@ configure({ adapter: new Adapter() });
 
 describe('Signing requests', () => {
   let wrapper: ReactWrapper;
-  let onActionStub: jest.Mock;
+  let onActionStub: ReturnType<typeof jest.fn>;
   let signRequests: SigningRequest[] = [];
 
   const emitter = new EventEmitter();
@@ -64,10 +81,10 @@ describe('Signing requests', () => {
   const check = (input: ReactWrapper): unknown => input.simulate('change', { target: { checked: true } });
 
   beforeEach(async () => {
-    jest.spyOn(messaging, 'cancelSignRequest').mockResolvedValue(true);
-    jest.spyOn(messaging, 'approveSignPassword').mockResolvedValue(true);
-    jest.spyOn(messaging, 'isSignLocked').mockResolvedValue({ isLocked: true, remainingTime: 0 });
-    jest.spyOn(MetadataCache, 'getSavedMeta').mockResolvedValue(westendMetadata);
+    jest.spyOn(messaging, 'cancelSignRequest').mockImplementation(() => Promise.resolve(true));
+    jest.spyOn(messaging, 'approveSignPassword').mockImplementation(() => Promise.resolve(true));
+    jest.spyOn(messaging, 'isSignLocked').mockImplementation(() => Promise.resolve({ isLocked: true, remainingTime: 0 }));
+    jest.spyOn(MetadataCache, 'getSavedMeta').mockImplementation(() => Promise.resolve(westendMetadata));
 
     signRequests = [
       {
@@ -282,7 +299,7 @@ describe('Signing requests', () => {
       wrapper.find('.cancelButton').find('a').simulate('click');
       await act(flushAllPromises);
 
-      expect(messaging.cancelSignRequest).toBeCalledWith(signRequests[0].id);
+      expect(messaging.cancelSignRequest).toHaveBeenCalledWith(signRequests[0].id);
     });
 
     it('passes request id and password to approve call', async () => {
@@ -293,7 +310,7 @@ describe('Signing requests', () => {
       await act(flushAllPromises);
       wrapper.update();
 
-      expect(messaging.approveSignPassword).toBeCalledWith(signRequests[0].id, false, 'hunter1');
+      expect(messaging.approveSignPassword).toHaveBeenCalledWith(signRequests[0].id, false, 'hunter1');
     });
 
     it('asks the background to cache the password when the relevant checkbox is checked', async () => {
@@ -307,7 +324,7 @@ describe('Signing requests', () => {
       await act(flushAllPromises);
       wrapper.update();
 
-      expect(messaging.approveSignPassword).toBeCalledWith(signRequests[0].id, true, 'hunter1');
+      expect(messaging.approveSignPassword).toHaveBeenCalledWith(signRequests[0].id, true, 'hunter1');
     });
 
     it('shows an error when the password is wrong', async () => {
@@ -332,6 +349,7 @@ describe('Signing requests', () => {
       wrapper.find('FontAwesomeIcon.arrowRight').simulate('click');
       await act(flushAllPromises);
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       act(() => {
         emitter.emit('request', [signRequests[0]]);
       });

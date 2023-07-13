@@ -1,20 +1,21 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+import type { HexString } from '@polkadot/util/types';
+import type { ThemeProps } from '../types.js';
 
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 
 import settings from '@polkadot/ui-settings';
 
-import { ActionContext, Address, Button, ButtonArea, Dropdown, VerticalSpace, Warning } from '../components';
-import { useLedger } from '../hooks/useLedger';
-import useTranslation from '../hooks/useTranslation';
-import { createAccountHardware } from '../messaging';
-import { Header, Name } from '../partials';
-import { ThemeProps } from '../types';
-import ledgerChains from '../util/legerChains';
+import { ActionContext, Address, Button, ButtonArea, Dropdown, VerticalSpace, Warning } from '../components/index.js';
+import { useLedger, useTranslation } from '../hooks/index.js';
+import { createAccountHardware } from '../messaging.js';
+import { Header, Name } from '../partials/index.js';
+import { styled } from '../styled.js';
+import ledgerChains from '../util/legerChains.js';
 
 interface AccOption {
   text: string;
@@ -38,7 +39,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
   const [addressOffset, setAddressOffset] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [isBusy, setIsBusy] = useState(false);
-  const [genesis, setGenesis] = useState<string | null>(null);
+  const [genesis, setGenesis] = useState<HexString | null>(null);
   const onAction = useContext(ActionContext);
   const [name, setName] = useState<string | null>(null);
   const { address, error: ledgerError, isLoading: ledgerLoading, isLocked: ledgerLocked, refresh, warning: ledgerWarning } = useLedger(genesis, accountIndex, addressOffset);
@@ -96,7 +97,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
     <>
       <Header
         showBackArrow
-        text={t<string>('Import Ledger Account')}
+        text={t('Import Ledger Account')}
       />
       <div className={className}>
         <Address
@@ -108,7 +109,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
         />
         <Dropdown
           className='network'
-          label={t<string>('Network')}
+          label={t('Network')}
           onChange={setGenesis}
           options={networkOps.current}
           value={genesis}
@@ -124,7 +125,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
             <Dropdown
               className='accountType'
               isDisabled={ledgerLoading}
-              label={t<string>('account type')}
+              label={t('account type')}
               onChange={_onSetAccountIndex}
               options={accOps.current}
               value={accountIndex}
@@ -132,7 +133,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
             <Dropdown
               className='accountIndex'
               isDisabled={ledgerLoading}
-              label={t<string>('address index')}
+              label={t('address index')}
               onChange={_onSetAddressOffset}
               options={addOps.current}
               value={addressOffset}
@@ -161,7 +162,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
               onClick={refresh}
             >
               <FontAwesomeIcon icon={faSync} />
-              {t<string>('Refresh')}
+              {t('Refresh')}
             </Button>
           )
           : (
@@ -170,7 +171,7 @@ function ImportLedger ({ className }: Props): React.ReactElement {
               isDisabled={!!error || !!ledgerError || !address || !genesis}
               onClick={_onSave}
             >
-              {t<string>('Import Account')}
+              {t('Import Account')}
             </Button>
           )
         }

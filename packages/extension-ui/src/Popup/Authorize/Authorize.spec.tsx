@@ -1,21 +1,26 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/// <reference types="@polkadot/dev-test/globals" />
 
 import '@polkadot/extension-mocks/chrome';
 
+import type { ReactWrapper } from 'enzyme';
 import type { AccountJson, AuthorizeRequest } from '@polkadot/extension-base/background/types';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { configure, mount, ReactWrapper } from 'enzyme';
+import enzyme from 'enzyme';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import { AccountContext, AuthorizeReqContext, themes, Warning } from '../../components';
-import { Header } from '../../partials';
-import { buildHierarchy } from '../../util/buildHierarchy';
-import Account from '../Accounts/Account';
-import Request from './Request';
-import Authorize from '.';
+import { AccountContext, AuthorizeReqContext, themes, Warning } from '../../components/index.js';
+import { Header } from '../../partials/index.js';
+import { buildHierarchy } from '../../util/buildHierarchy.js';
+import Account from '../Accounts/Account.js';
+import Authorize from './index.js';
+import Request from './Request.js';
+
+const { configure, mount } = enzyme;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
 configure({ adapter: new Adapter() });

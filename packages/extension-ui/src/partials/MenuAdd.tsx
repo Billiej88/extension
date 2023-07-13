@@ -1,19 +1,17 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
+import type { ThemeProps } from '../types.js';
 
 import { faUsb } from '@fortawesome/free-brands-svg-icons';
 import { faCodeBranch, faFileExport, faFileUpload, faKey, faPlusCircle, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useContext } from 'react';
-import styled from 'styled-components';
 
-import { AccountContext, Link, MediaContext, Menu, MenuDivider, MenuItem } from '../components';
-import useIsPopup from '../hooks/useIsPopup';
-import { useLedger } from '../hooks/useLedger';
-import useTranslation from '../hooks/useTranslation';
-import { windowOpen } from '../messaging';
+import { AccountContext, Link, MediaContext, Menu, MenuDivider, MenuItem } from '../components/index.js';
+import { useIsPopup, useLedger, useTranslation } from '../hooks/index.js';
+import { windowOpen } from '../messaging.js';
+import { styled } from '../styled.js';
 
 interface Props extends ThemeProps {
   className?: string;
@@ -68,13 +66,13 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
       <MenuItem className='menuItem'>
         <Link to={'/account/export-all'}>
           <FontAwesomeIcon icon={faFileExport} />
-          <span>{t<string>('Export all accounts')}</span>
+          <span>{t('Export all accounts')}</span>
         </Link>
       </MenuItem>
       <MenuItem className='menuItem'>
         <Link to='/account/import-seed'>
           <FontAwesomeIcon icon={faKey} />
-          <span>{t<string>('Import account from pre-existing seed')}</span>
+          <span>{t('Import account from pre-existing seed')}</span>
         </Link>
       </MenuItem>
       <MenuItem className='menuItem'>
@@ -83,7 +81,7 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
           to={isPopup ? undefined : jsonPath}
         >
           <FontAwesomeIcon icon={faFileUpload} />
-          <span>{t<string>('Restore account from backup JSON file')}</span>
+          <span>{t('Restore account from backup JSON file')}</span>
         </Link>
       </MenuItem>
       <MenuDivider />
@@ -91,13 +89,13 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
         <Link
           isDisabled={!mediaAllowed}
           title={!mediaAllowed
-            ? t<string>('Camera access must be first enabled in the settings')
+            ? t('Camera access must be first enabled in the settings')
             : ''
           }
           to='/account/import-qr'
         >
           <FontAwesomeIcon icon={faQrcode} />
-          <span>{t<string>('Attach external QR-signer account')}</span>
+          <span>{t('Attach external QR-signer account')}</span>
         </Link>
       </MenuItem>
       <MenuItem className='menuItem ledger'>
@@ -105,14 +103,14 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
           ? (
             <Link
               isDisabled={!isLedgerCapable}
-              title={ (!isLedgerCapable && t<string>('Ledger devices can only be connected with Chrome browser')) || ''}
+              title={ (!isLedgerCapable && t('Ledger devices can only be connected with Chrome browser')) || ''}
               to={ledgerPath}
             >
               <FontAwesomeIcon
                 icon={faUsb}
                 rotation={270}
               />
-              <span>{ t<string>('Attach ledger account')}</span>
+              <span>{ t('Attach ledger account')}</span>
             </Link>
           )
           : (
@@ -121,7 +119,7 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
                 icon={faUsb}
                 rotation={270}
               />
-              <span>{ t<string>('Connect Ledger device')}</span>
+              <span>{ t('Connect Ledger device')}</span>
             </Link>
           )
         }

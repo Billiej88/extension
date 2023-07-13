@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ResponseJsonGetAccountInfo } from '@polkadot/extension-base/background/types';
@@ -6,16 +6,16 @@ import type { KeyringPair$Json } from '@polkadot/keyring/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
 
 import { u8aToString } from '@polkadot/util';
 
-import { AccountContext, ActionContext, Address, Button, InputFileWithLabel, InputWithLabel, Warning } from '../components';
-import useTranslation from '../hooks/useTranslation';
-import { batchRestore, jsonGetAccountInfo, jsonRestore } from '../messaging';
-import { Header } from '../partials';
-import { DEFAULT_TYPE } from '../util/defaultType';
-import { isKeyringPairs$Json } from '../util/typeGuards';
+import { AccountContext, ActionContext, Address, Button, InputFileWithLabel, InputWithLabel, Warning } from '../components/index.js';
+import { useTranslation } from '../hooks/index.js';
+import { batchRestore, jsonGetAccountInfo, jsonRestore } from '../messaging.js';
+import { Header } from '../partials/index.js';
+import { styled } from '../styled.js';
+import { DEFAULT_TYPE } from '../util/defaultType.js';
+import { isKeyringPairs$Json } from '../util/typeGuards.js';
 
 const acceptedFormats = ['application/json', 'text/plain'].join(', ');
 
@@ -117,7 +117,7 @@ function Upload ({ className }: Props): React.ReactElement {
       <Header
         showBackArrow
         smallMargin
-        text={t<string>('Restore from JSON')}
+        text={t('Restore from JSON')}
       />
       <div className={className}>
         {accountsInfo.map(({ address, genesisHash, name, type = DEFAULT_TYPE }, index) => (
@@ -132,7 +132,7 @@ function Upload ({ className }: Props): React.ReactElement {
         <InputFileWithLabel
           accept={acceptedFormats}
           isError={isFileError}
-          label={t<string>('backup file')}
+          label={t('backup file')}
           onChange={_onChangeFile}
           withLabel
         />
@@ -140,14 +140,14 @@ function Upload ({ className }: Props): React.ReactElement {
           <Warning
             isDanger
           >
-            {t<string>('Invalid Json file')}
+            {t('Invalid Json file')}
           </Warning>
         )}
         {requirePassword && (
           <div>
             <InputWithLabel
               isError={isPasswordError}
-              label={t<string>('Password for this file')}
+              label={t('Password for this file')}
               onChange={_onChangePass}
               type='password'
             />
@@ -156,7 +156,7 @@ function Upload ({ className }: Props): React.ReactElement {
                 isBelowInput
                 isDanger
               >
-                {t<string>('Unable to decode using the supplied passphrase')}
+                {t('Unable to decode using the supplied passphrase')}
               </Warning>
             )}
           </div>
@@ -167,7 +167,7 @@ function Upload ({ className }: Props): React.ReactElement {
           isDisabled={isFileError || isPasswordError}
           onClick={_onRestore}
         >
-          {t<string>('Restore')}
+          {t('Restore')}
         </Button>
       </div>
     </>

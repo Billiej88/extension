@@ -1,10 +1,10 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import styled from 'styled-components';
 
-import { Button } from '.';
+import { styled } from '../styled.js';
+import { Button } from './index.js';
 
 interface ButtonWithSubtitleProps {
   title: string;

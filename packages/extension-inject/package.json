@@ -1,11 +1,12 @@
 {
   "author": "Jaco Greeff <jacogr@gmail.com>",
   "bugs": "https://github.com/polkadot-js/extension/issues",
-  "contributors": [],
   "description": "A generic injector (usable to any extension), that populates the base exposed interfaces to be used by dapps.",
+  "engines": {
+    "node": ">=16"
+  },
   "homepage": "https://github.com/polkadot-js/extension/tree/master/packages/extension-inject#readme",
   "license": "Apache-2.0",
-  "maintainers": [],
   "name": "@polkadot/extension-inject",
   "repository": {
     "directory": "packages/extension-inject",
@@ -14,21 +15,23 @@
   },
   "sideEffects": true,
   "type": "module",
-  "version": "0.44.7-13-x",
+  "version": "0.46.6-2-x",
   "main": "index.js",
   "dependencies": {
-    "@babel/runtime": "^7.19.0",
-    "@polkadot/rpc-provider": "^9.4.3",
-    "@polkadot/types": "^9.4.3",
-    "@polkadot/util": "^10.1.9",
-    "@polkadot/util-crypto": "^10.1.9",
-    "@polkadot/x-global": "^10.1.9"
+    "@polkadot/api": "^10.9.1",
+    "@polkadot/rpc-provider": "^10.9.1",
+    "@polkadot/types": "^10.9.1",
+    "@polkadot/util": "^12.3.2",
+    "@polkadot/util-crypto": "^12.3.2",
+    "@polkadot/x-global": "^12.3.2",
+    "tslib": "^2.6.0"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.197",
-    "@types/firefox-webext-browser": "^94.0.1"
+    "@types/chrome": "^0.0.240",
+    "@types/firefox-webext-browser": "^111.0.1"
   },
   "peerDependencies": {
-    "@polkadot/api": "*"
+    "@polkadot/api": "*",
+    "@polkadot/util": "*"
   }
 }

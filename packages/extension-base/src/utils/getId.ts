@@ -1,7 +1,7 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { EXTENSION_PREFIX } from '../defaults';
+import { EXTENSION_PREFIX } from '../defaults.js';
 
 let counter = 0;
 

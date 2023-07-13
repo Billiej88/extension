@@ -1,8 +1,8 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { InjectedAccount, InjectedAccounts, Unsubcall } from '@polkadot/extension-inject/types';
-import type { SendRequest } from './types';
+import type { SendRequest } from './types.js';
 
 // External to class, this.# is not private enough (yet)
 let sendRequest: SendRequest;

@@ -1,12 +1,12 @@
-// Copyright 2019-2022 @polkadot/extension-base authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { InjectedProvider, ProviderList, ProviderMeta } from '@polkadot/extension-inject/types';
 import type { ProviderInterfaceEmitCb, ProviderInterfaceEmitted } from '@polkadot/rpc-provider/types';
 import type { AnyFunction } from '@polkadot/types/types';
-import type { SendRequest } from './types';
+import type { SendRequest } from './types.js';
 
-import EventEmitter from 'eventemitter3';
+import { EventEmitter } from 'eventemitter3';
 
 import { isUndefined, logger } from '@polkadot/util';
 
@@ -47,6 +47,10 @@ export default class PostMessageProvider implements InjectedProvider {
     this.#eventemitter = new EventEmitter();
 
     sendRequest = _sendRequest;
+  }
+
+  public get isClonable (): boolean {
+    return true;
   }
 
   /**

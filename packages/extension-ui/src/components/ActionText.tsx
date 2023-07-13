@@ -1,12 +1,14 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import type { ThemeProps } from '../types';
+import type { MouseEventHandler } from 'react';
+import type { ThemeProps } from '../types.js';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { MouseEventHandler } from 'react';
-import styled from 'styled-components';
+import React from 'react';
+
+import { styled } from '../styled.js';
 
 interface Props {
   className?: string;

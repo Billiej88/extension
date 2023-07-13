@@ -1,12 +1,12 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { AccountWithChildren } from '@polkadot/extension-base/background/types';
 
 import React from 'react';
-import styled from 'styled-components';
 
-import Account from './Account';
+import { styled } from '../../styled.js';
+import Account from './Account.js';
 
 interface Props extends AccountWithChildren {
   className?: string

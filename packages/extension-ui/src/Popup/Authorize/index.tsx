@@ -1,15 +1,15 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
+import type { ThemeProps } from '../../types.js';
 
 import React, { useContext } from 'react';
-import styled from 'styled-components';
 
-import { AuthorizeReqContext } from '../../components';
-import useTranslation from '../../hooks/useTranslation';
-import { Header } from '../../partials';
-import Request from './Request';
+import { AuthorizeReqContext } from '../../components/index.js';
+import { useTranslation } from '../../hooks/index.js';
+import { Header } from '../../partials/index.js';
+import { styled } from '../../styled.js';
+import Request from './Request.js';
 
 interface Props extends ThemeProps {
   className?: string;
@@ -24,7 +24,7 @@ function Authorize ({ className = '' }: Props): React.ReactElement {
       <div className={`${className} ${requests.length === 1 ? 'lastRequest' : ''}`}>
         <Header
           smallMargin={true}
-          text={t<string>('Account connection request')}
+          text={t('Account connection request')}
         />
         {requests.map(({ id, request, url }, index): React.ReactNode => (
           <Request

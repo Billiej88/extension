@@ -1,13 +1,14 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconTheme } from '@polkadot/react-identicon/types';
-import type { ThemeProps } from '../types';
+import type { ThemeProps } from '../types.js';
 
 import React from 'react';
-import styled from 'styled-components';
 
 import Icon from '@polkadot/react-identicon';
+
+import { styled } from '../styled.js';
 
 interface Props {
   className?: string;

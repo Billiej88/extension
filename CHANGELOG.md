@@ -1,10 +1,153 @@
 # CHANGELOG
 
-## master
+## 0.46.5 Jun 12, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Adjust object index access for stricter tsconfig settings
+- Upgrade to `@polkadot/api` 10.9.1
+- Bump to `@polkadot/util` 12.3.2
+
+
+## 0.46.4 Jun 5, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Upgrade to `@polkadot/api` 10.8.1
+- Bump to `@polkadot/util` 12.2.2
+
+
+## 0.46.3 May 13, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Add `module` to `package.json` export map (ESM-only)
+- Upgrade to `@polkadot/api` 10.6.1
+- Bump to `@polkadot/util` 12.1.1
+
+
+## 0.46.2 Apr 30, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Adjust compilation output for `__internal__` class fields
+- Upgrade to `@polkadot/api` 10.5.1
+- Bump to `@polkadot/util` 12.1.1
+
+
+## 0.46.1 Apr 22, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Upgrade to `@polkadot/api` 10.4.1
+- Upgrade to `@polkadot/util` 12.0.1
+
+
+## 0.45.5 Apr 1, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Upgrade to `@polkadot/api` 10.2.2
+- Upgrade to `@polkadot/util` 11.1.3
+
+
+## 0.45.4 Mar 25, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Updated to `@polkadot/api` 10.2.1
+- Updated to `@polkadot/util` 11.1.2
+
+
+## 0.45.3 Mar 19, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Updated to `@polkadot/api` 10.1.4
+- Updated to `@polkadot/util` 11.1.1
+
+
+## 0.45.2 Mar 11, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Use consistent `.js` imports in source files (TS moduleResolution)
+- Updated to `@polkadot/api` 10.1.1
+- Updated to `@polkadot/util` 11.0.2
+
+
+## 0.45.1 Mar 5, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Swap TS -> JS compiler to use tsc (from babel)
+- Adjust all tests to use `node:test` runner (ESM variants)
+- Updated to `@polkadot/api` 10.0.1
+- Updated to `@polkadot/util` 11.0.1
+
+
+## 0.44.9 Feb 19, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Updated to `@polkadot/api` 9.14.2
+- Updated to `@polkadot/util` 10.4.2
+
+
+## 0.44.8 Jan 8, 2023
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Changes:
+
+- Updated to `@polkadot/api` 9.11.1
+- Updated to `@polkadot/util` 10.2.3
+
+
+## 0.44.7 Dec 27, 2022
+
+- **Important** Not published to the stores, aligns with latest released packages.
+
+Contributed:
+
+- Fix naming of `getAllMetadata` message (Thanks to https://github.com/Nick-1979)
+- Add more zh translations (Thanks to https://github.com/chendatony31)
+- Typo fix (Thanks to https://github.com/Nick-1979)
+- Re-add QR signing support (Thanks to https://github.com/Tbaut)
+- Adjust flow of auth management screens (Thanks to https://github.com/Tbaut)
+- Add links to connected accounts in header (Thanks to https://github.com/Tbaut)
 
 Changes:
 
 - Ensure that `EXTENSION_PREFIX` is always set as part of `@polkadot/extension-base`
+- Allow for `genesisHash` filter to both `web3{Accounts, AccountsSubscribe}`
+- Allow for transparent extension `ping` (as available)
+- Support for new privacy-preserving `connect(<source>)` interfaces (non-default)
+- Always set metadata before signing (fixes for ETH-compat chains)
+- Updated to `@polkadot/api` 9.10.4
+- Updated to `@polkadot/util` 10.2.1
 
 
 ## 0.44.6 Aug 21, 2022

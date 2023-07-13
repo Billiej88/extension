@@ -1,14 +1,18 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { MessageTypes, TransportRequestMessage } from '../types';
+/* global chrome */
+
+import type { MessageTypes, TransportRequestMessage } from '../types.js';
 
 import { assert } from '@polkadot/util';
 
-import { PORT_EXTENSION } from '../../defaults';
-import Extension from './Extension';
-import State from './State';
-import Tabs from './Tabs';
+import { PORT_EXTENSION } from '../../defaults.js';
+import Extension from './Extension.js';
+import State from './State.js';
+import Tabs from './Tabs.js';
+
+export { withErrorLog } from './helpers.js';
 
 const state = new State();
 const extension = new Extension(state);
@@ -31,7 +35,7 @@ export default function handler<TMessageType extends MessageTypes> ({ id, messag
     : tabs.handle(id, message, request, from, port);
 
   promise
-    .then((response): void => {
+    .then((response: unknown): void => {
       console.log(`[out] ${source}`); // :: ${JSON.stringify(response)}`);
 
       // between the start and the end of the promise, the user may have closed

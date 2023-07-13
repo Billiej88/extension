@@ -1,32 +1,33 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/* global chrome */
 
 import type { MetadataDef } from '@polkadot/extension-inject/types';
 import type { KeyringPair, KeyringPair$Json, KeyringPair$Meta } from '@polkadot/keyring/types';
-import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
+import type { Registry, SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { SubjectInfo } from '@polkadot/ui-keyring/observable/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
-import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MetadataRequest, RequestAccountBatchExport, RequestAccountChangePassword, RequestAccountCreateExternal, RequestAccountCreateHardware, RequestAccountCreateSuri, RequestAccountEdit, RequestAccountExport, RequestAccountForget, RequestAccountShow, RequestAccountTie, RequestAccountValidate, RequestActiveTabsUrlUpdate, RequestAuthorizeApprove, RequestBatchRestore, RequestDeriveCreate, RequestDeriveValidate, RequestJsonRestore, RequestMetadataApprove, RequestMetadataReject, RequestSeedCreate, RequestSeedValidate, RequestSigningApprovePassword, RequestSigningApproveSignature, RequestSigningCancel, RequestSigningIsLocked, RequestTypes, RequestUpdateAuthorizedAccounts, ResponseAccountExport, ResponseAccountsExport, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSeedCreate, ResponseSeedValidate, ResponseSigningIsLocked, ResponseType, SigningRequest } from '../types';
+import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MetadataRequest, RequestAccountBatchExport, RequestAccountChangePassword, RequestAccountCreateExternal, RequestAccountCreateHardware, RequestAccountCreateSuri, RequestAccountEdit, RequestAccountExport, RequestAccountForget, RequestAccountShow, RequestAccountTie, RequestAccountValidate, RequestActiveTabsUrlUpdate, RequestAuthorizeApprove, RequestBatchRestore, RequestDeriveCreate, RequestDeriveValidate, RequestJsonRestore, RequestMetadataApprove, RequestMetadataReject, RequestSeedCreate, RequestSeedValidate, RequestSigningApprovePassword, RequestSigningApproveSignature, RequestSigningCancel, RequestSigningIsLocked, RequestTypes, RequestUpdateAuthorizedAccounts, ResponseAccountExport, ResponseAccountsExport, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSeedCreate, ResponseSeedValidate, ResponseSigningIsLocked, ResponseType, SigningRequest } from '../types.js';
+import type { AuthorizedAccountsDiff } from './State.js';
+import type State from './State.js';
 
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@polkadot/extension-base/defaults';
+import { metadataExpand } from '@polkadot/extension-chains';
 import { TypeRegistry } from '@polkadot/types';
 import keyring from '@polkadot/ui-keyring';
 import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';
 import { assert, isHex } from '@polkadot/util';
 import { keyExtractSuri, mnemonicGenerate, mnemonicValidate } from '@polkadot/util-crypto';
 
-import { withErrorLog } from './helpers';
-import State, { AuthorizedAccountsDiff } from './State';
-import { createSubscription, unsubscribe } from './subscriptions';
+import { withErrorLog } from './helpers.js';
+import { createSubscription, unsubscribe } from './subscriptions.js';
 
 type CachedUnlocks = Record<string, number>;
 
 const SEED_DEFAULT_LENGTH = 12;
 const SEED_LENGTHS = [12, 15, 18, 21, 24];
 const ETH_DERIVE_DEFAULT = "/m/44'/60'/0'/0/0";
-
-// a global registry to use internally
-const registry = new TypeRegistry();
 
 function getSuri (seed: string, type?: KeypairType): string {
   return type === 'ethereum'
@@ -86,7 +87,7 @@ export default class Extension {
       }
 
       pair.decodePkcs8(oldPass);
-    } catch (error) {
+    } catch {
       throw new Error('oldPass is invalid');
     }
 
@@ -180,7 +181,7 @@ export default class Extension {
       keyring.backupAccount(keyring.getPair(address), password);
 
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -348,11 +349,6 @@ export default class Extension {
     const { reject, request, resolve } = queued;
     const pair = keyring.getPair(queued.account.address);
 
-    // unlike queued.account.address the following
-    // address is encoded with the default prefix
-    // which what is used for password caching mapping
-    const { address } = pair;
-
     if (!pair) {
       reject(new Error('Unable to find pair'));
 
@@ -370,25 +366,37 @@ export default class Extension {
       pair.decodePkcs8(password);
     }
 
+    // construct a new registry (avoiding pollution), between requests
+    let registry: Registry;
     const { payload } = request;
 
     if (isJsonPayload(payload)) {
       // Get the metadata for the genesisHash
-      const currentMetadata = this.#state.knownMetadata.find((meta: MetadataDef) =>
-        meta.genesisHash === payload.genesisHash);
+      const metadata = this.#state.knownMetadata.find(({ genesisHash }) => genesisHash === payload.genesisHash);
 
-      // set the registry before calling the sign function
-      registry.setSignedExtensions(payload.signedExtensions, currentMetadata?.userExtensions);
+      if (metadata) {
+        // we have metadata, expand it and extract the info/registry
+        const expanded = metadataExpand(metadata, false);
 
-      if (currentMetadata) {
-        registry.register(currentMetadata?.types);
+        registry = expanded.registry;
+        registry.setSignedExtensions(payload.signedExtensions, expanded.definition.userExtensions);
+      } else {
+        // we have no metadata, create a new registry
+        registry = new TypeRegistry();
+        registry.setSignedExtensions(payload.signedExtensions);
       }
+    } else {
+      // for non-payload, just create a registry to use
+      registry = new TypeRegistry();
     }
 
     const result = request.sign(registry, pair);
 
     if (savePass) {
-      this.#cachedUnlocks[address] = Date.now() + PASSWORD_EXPIRY_MS;
+      // unlike queued.account.address the following
+      // address is encoded with the default prefix
+      // which what is used for password caching mapping
+      this.#cachedUnlocks[pair.address] = Date.now() + PASSWORD_EXPIRY_MS;
     } else {
       pair.lock();
     }
@@ -477,13 +485,13 @@ export default class Extension {
 
     try {
       parentPair.decodePkcs8(password);
-    } catch (e) {
+    } catch {
       throw new Error('invalid password');
     }
 
     try {
       return parentPair.derive(suri, metadata);
-    } catch (err) {
+    } catch {
       throw new Error(`"${suri}" is not a valid derivation path`);
     }
   }
@@ -619,6 +627,9 @@ export default class Extension {
 
       case 'pri(json.account.info)':
         return this.jsonGetAccountInfo(request as KeyringPair$Json);
+
+      case 'pri(ping)':
+        return Promise.resolve(true);
 
       case 'pri(seed.create)':
         return this.seedCreate(request as RequestSeedCreate);

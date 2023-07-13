@@ -1,16 +1,17 @@
-// Copyright 2017-2022 @polkadot/react-components authors & contributors
+// Copyright 2017-2023 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
+import type { DropzoneRef } from 'react-dropzone';
+import type { ThemeProps } from '../types.js';
 
 import React, { createRef, useCallback, useState } from 'react';
-import Dropzone, { DropzoneRef } from 'react-dropzone';
-import styled from 'styled-components';
+import Dropzone from 'react-dropzone';
 
 import { formatNumber, hexToU8a, isHex, u8aToString } from '@polkadot/util';
 
-import useTranslation from '../hooks/useTranslation';
-import Label from './Label';
+import { useTranslation } from '../hooks/index.js';
+import { styled } from '../styled.js';
+import Label from './Label.js';
 
 function classes (...classNames: (boolean | null | string | undefined)[]): string {
   return classNames
@@ -99,7 +100,7 @@ function InputFile ({ accept, className = '', clearContent, convertHex, isDisabl
       onDrop={_onDrop}
       ref={dropRef}
     >
-      {({ getInputProps, getRootProps }): JSX.Element => (
+      {({ getInputProps, getRootProps }): React.ReactElement => (
         <div {...getRootProps({ className: classes('ui--InputFile', isError ? 'error' : '', className) })}>
           <input {...getInputProps()} />
           <em className='label'>

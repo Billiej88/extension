@@ -1,11 +1,12 @@
 {
   "author": "Jaco Greeff <jacogr@gmail.com>",
   "bugs": "https://github.com/polkadot-js/extension/issues",
-  "contributors": [],
   "description": "Definitions for all known chains as exposed by the extension.",
+  "engines": {
+    "node": ">=16"
+  },
   "homepage": "https://github.com/polkadot-js/extension/tree/master/packages/extension-chains#readme",
   "license": "Apache-2.0",
-  "maintainers": [],
   "name": "@polkadot/extension-chains",
   "repository": {
     "directory": "packages/extension-chains",
@@ -17,14 +18,14 @@
     "./detectPackage.cjs"
   ],
   "type": "module",
-  "version": "0.44.7-13-x",
+  "version": "0.46.6-2-x",
   "main": "index.js",
   "dependencies": {
-    "@babel/runtime": "^7.19.0",
-    "@polkadot/extension-inject": "^0.44.7-13-x",
-    "@polkadot/networks": "^10.1.9",
-    "@polkadot/util": "^10.1.9",
-    "@polkadot/util-crypto": "^10.1.9"
+    "@polkadot/extension-inject": "0.46.6-2-x",
+    "@polkadot/networks": "^12.3.2",
+    "@polkadot/util": "^12.3.2",
+    "@polkadot/util-crypto": "^12.3.2",
+    "tslib": "^2.6.0"
   },
   "peerDependencies": {
     "@polkadot/api": "*",

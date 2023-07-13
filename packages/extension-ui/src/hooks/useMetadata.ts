@@ -1,11 +1,11 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Chain } from '@polkadot/extension-chains/types';
 
 import { useEffect, useState } from 'react';
 
-import { getMetadata } from '../messaging';
+import { getMetadata } from '../messaging.js';
 
 export default function useMetadata (genesisHash?: string | null, isPartial?: boolean): Chain | null {
   const [chain, setChain] = useState<Chain | null>(null);

@@ -1,4 +1,4 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { AccountJson, RequestSign } from '@polkadot/extension-base/background/types';
@@ -10,14 +10,14 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { TypeRegistry } from '@polkadot/types';
 
-import { ActionContext, Address, VerticalSpace, Warning } from '../../../components';
-import { useTranslation } from '../../../components/translate';
-import { approveSignSignature } from '../../../messaging';
-import Bytes from '../Bytes';
-import Extrinsic from '../Extrinsic';
-import LedgerSign from '../LedgerSign';
-import Qr from '../Qr';
-import SignArea from './SignArea';
+import { ActionContext, Address, VerticalSpace, Warning } from '../../../components/index.js';
+import { useTranslation } from '../../../hooks/index.js';
+import { approveSignSignature } from '../../../messaging.js';
+import Bytes from '../Bytes.js';
+import Extrinsic from '../Extrinsic.js';
+import LedgerSign from '../LedgerSign.js';
+import Qr from '../Qr.js';
+import SignArea from './SignArea.js';
 
 interface Props {
   account: AccountJson;
@@ -43,7 +43,7 @@ function isRawPayload (payload: SignerPayloadJSON | SignerPayloadRaw): payload i
   return !!(payload as SignerPayloadRaw).data;
 }
 
-export default function Request ({ account: { accountIndex, addressOffset, isExternal, isHardware }, buttonText, isFirst, request, signId, url }: Props): React.ReactElement<Props> | null {
+export default function Request ({ account: { accountIndex, addressOffset, genesisHash, isExternal, isHardware }, buttonText, isFirst, request, signId, url }: Props): React.ReactElement<Props> | null {
   const onAction = useContext(ActionContext);
   const [{ hexBytes, payload }, setData] = useState<Data>({ hexBytes: null, payload: null });
   const [error, setError] = useState<string | null>(null);
@@ -126,7 +126,6 @@ export default function Request ({ account: { accountIndex, addressOffset, isExt
           error={error}
           isExternal={isExternal}
           isFirst={isFirst}
-          isSignable
           setError={setError}
           signId={signId}
         />
@@ -143,27 +142,39 @@ export default function Request ({ account: { accountIndex, addressOffset, isExt
             isExternal={isExternal}
           />
         </div>
-        <Bytes
-          bytes={data}
-          url={url}
-        />
+        {isExternal && !isHardware && genesisHash
+          ? (
+            <Qr
+              address={address}
+              cmd={CMD_SIGN_MESSAGE}
+              genesisHash={genesisHash}
+              onSignature={_onSignature}
+              payload={data}
+            />
+          )
+          : (
+            <Bytes
+              bytes={data}
+              url={url}
+            />
+          )
+        }
         <VerticalSpace />
-        {(isHardware || isExternal) && (
+        {isExternal && !isHardware && !genesisHash && (
           <>
-            <Warning>{
-              isHardware
-                ? t('Raw data signing is not supported for hardware wallets.')
-                : t('Raw data signing is not supported for QR wallets.')
-            }</Warning>
+            <Warning isDanger>{t('"Allow use on any network" is not supported to show a QR code. You must associate this account with a network.')}</Warning>
             <VerticalSpace />
           </>
         )}
+        {isHardware && <>
+          <Warning>{t('Message signing is not supported for hardware wallets.')}</Warning>
+          <VerticalSpace />
+        </>}
         <SignArea
           buttonText={buttonText}
           error={error}
           isExternal={isExternal}
           isFirst={isFirst}
-          isSignable={!isHardware && !isExternal}
           setError={setError}
           signId={signId}
         />

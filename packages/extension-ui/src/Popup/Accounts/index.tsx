@@ -1,19 +1,19 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
+import type { AccountWithChildren } from '@polkadot/extension-base/background/types';
+import type { ThemeProps } from '../../types.js';
 
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
 
-import { AccountWithChildren } from '@polkadot/extension-base/background/types';
 import getNetworkMap from '@polkadot/extension-ui/util/getNetworkMap';
 
-import { AccountContext } from '../../components';
-import useTranslation from '../../hooks/useTranslation';
-import { Header } from '../../partials';
-import AccountsTree from './AccountsTree';
-import AddAccount from './AddAccount';
+import { AccountContext } from '../../components/index.js';
+import { useTranslation } from '../../hooks/index.js';
+import { Header } from '../../partials/index.js';
+import { styled } from '../../styled.js';
+import AccountsTree from './AccountsTree.js';
+import AddAccount from './AddAccount.js';
 
 interface Props extends ThemeProps {
   className?: string;
@@ -31,7 +31,8 @@ function Accounts ({ className }: Props): React.ReactElement {
       filter
         ? hierarchy.filter((account) =>
           account.name?.toLowerCase().includes(filter) ||
-          (account.genesisHash && networkMap.get(account.genesisHash)?.toLowerCase().includes(filter))
+          (account.genesisHash && networkMap.get(account.genesisHash)?.toLowerCase().includes(filter)) ||
+          account.address.toLowerCase().includes(filter)
         )
         : hierarchy
     );
@@ -53,7 +54,7 @@ function Accounts ({ className }: Props): React.ReactElement {
               showConnectedAccounts
               showSearch
               showSettings
-              text={t<string>('Accounts')}
+              text={t('Accounts')}
             />
             <div className={className}>
               {filteredAccount.map((json, index): React.ReactNode => (

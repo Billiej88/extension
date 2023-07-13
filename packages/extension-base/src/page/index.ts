@@ -1,11 +1,13 @@
-// Copyright 2019-2022 @polkadot/extension authors & contributors
+// Copyright 2019-2023 @polkadot/extension-base authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, RequestTypes, ResponseTypes, SubscriptionMessageTypes, TransportRequestMessage, TransportResponseMessage } from '../background/types';
+/* eslint-disable no-redeclare */
 
-import { MESSAGE_ORIGIN_PAGE } from '../defaults';
-import { getId } from '../utils/getId';
-import Injected from './Injected';
+import type { MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, RequestTypes, ResponseTypes, SubscriptionMessageTypes, TransportRequestMessage, TransportResponseMessage } from '../background/types.js';
+
+import { MESSAGE_ORIGIN_PAGE } from '../defaults.js';
+import { getId } from '../utils/getId.js';
+import Injected from './Injected.js';
 
 // when sending a message from the injector to the extension, we
 //  - create an event - this we send to the loader

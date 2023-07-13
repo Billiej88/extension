@@ -1,17 +1,17 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { RequestAuthorizeTab } from '@polkadot/extension-base/background/types';
-import type { ThemeProps } from '../../types';
+import type { ThemeProps } from '../../types.js';
 
 import React, { useCallback, useContext, useEffect } from 'react';
-import styled from 'styled-components';
 
-import { AccountContext, ActionBar, ActionContext, Button, Link } from '../../components';
-import useTranslation from '../../hooks/useTranslation';
-import { approveAuthRequest, deleteAuthRequest } from '../../messaging';
-import { AccountSelection } from '../../partials';
-import NoAccount from './NoAccount';
+import { AccountContext, ActionBar, ActionContext, Button, Link } from '../../components/index.js';
+import { useTranslation } from '../../hooks/index.js';
+import { approveAuthRequest, deleteAuthRequest } from '../../messaging.js';
+import { AccountSelection } from '../../partials/index.js';
+import { styled } from '../../styled.js';
+import NoAccount from './NoAccount.js';
 
 interface Props extends ThemeProps {
   authId: string;
@@ -67,7 +67,7 @@ function Request ({ authId, className, isFirst, request: { origin }, url }: Prop
           className='acceptButton'
           onClick={_onApprove}
         >
-          {t<string>('Connect {{total}} account(s)', { replace: {
+          {t('Connect {{total}} account(s)', { replace: {
             total: selectedAccounts.length
           } })}
         </Button>
@@ -78,7 +78,7 @@ function Request ({ authId, className, isFirst, request: { origin }, url }: Prop
           isDanger
           onClick={_onClose}
         >
-          {t<string>('Ask again later')}
+          {t('Ask again later')}
         </Link>
       </ActionBar>
     </div>

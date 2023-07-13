@@ -1,14 +1,14 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
+// Copyright 2019-2023 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
+import type { ThemeProps } from '../../types.js';
 
 import React, { useMemo } from 'react';
-import styled from 'styled-components';
 
 import { isAscii, u8aToString, u8aUnwrapBytes } from '@polkadot/util';
 
-import useTranslation from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/index.js';
+import { styled } from '../../styled.js';
 
 interface Props {
   className?: string;
@@ -30,11 +30,11 @@ function Bytes ({ bytes, className, url }: Props): React.ReactElement<Props> {
     <table className={className}>
       <tbody>
         <tr>
-          <td className='label'>{t<string>('from')}</td>
+          <td className='label'>{t('from')}</td>
           <td className='data'>{url}</td>
         </tr>
         <tr>
-          <td className='label'>{t<string>('bytes')}</td>
+          <td className='label'>{t('bytes')}</td>
           <td className='data pre'><div>{text}</div></td>
         </tr>
       </tbody>
@@ -59,7 +59,7 @@ export default styled(Bytes)(({ theme }: ThemeProps) => `
 
     &.pre {
       padding: 0px;
-      
+
       div {
         padding: 0.15rem;
         font-family: inherit;
